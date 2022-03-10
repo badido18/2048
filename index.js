@@ -1,17 +1,19 @@
 const matrix2DInit5 = [
     [0,0,0,0,0],
-    [0,0,2,0,0],
     [0,0,0,0,0],
+    [0,2,0,0,0],
     [0,0,0,2,0],
     [0,0,0,0,0]
 ]
 
 class Matrix{
-    constructor(dim = 5,init = matrix2DInit5){
-        this.dimen = dim
+
+    constructor(init = matrix2DInit5){
         this.state = init
+        this.dimen = init.length
         this.lastState = []
         this.free = []
+        this.score = 0
     }
 
     fillRandomTiles(){
@@ -23,14 +25,14 @@ class Matrix{
         else{
             this.lastState = this.state // save state
             let numb = 2 + (2 * Math.floor(Math.random() * 2) )
-            this.loadFreeSpaces() 
+            this.updateFreeSpaces() 
             let sp = Math.floor(Math.random() * (this.free.length - 1))
             this.state[this.free[sp][0]][this.free[sp][1]] = numb
         }
 
     }
 
-    loadFreeSpaces(){
+    updateFreeSpaces(){
         for(let x=0;x<this.dimen;x++){
             for(let y=0;y<this.dimen;y++){
                 if(this.state[x][y] == 0){
@@ -51,6 +53,7 @@ class Matrix{
             else{
                 if(prec == this.state[x][y]){
                     this.state[shift-1][y] *=2
+                    this.score += this.state[shift-1][y]
                     shift--
                     prec = -1
                 }else{
@@ -76,6 +79,7 @@ class Matrix{
             else{
                 if(prec == this.state[x][y]){
                     this.state[shift+1][y] *=2
+                    this.score += this.state[shift+1][y]
                     shift++
                     prec = -1
                 }else{
@@ -101,6 +105,7 @@ class Matrix{
             else{
                 if(prec == this.state[x][y]){
                     this.state[x][shift+1] *=2
+                    this.score += this.state[x][shift+1]
                     shift++
                     prec = -1
                 }else{
@@ -126,6 +131,7 @@ class Matrix{
             else{
                 if(prec == this.state[x][y]){
                     this.state[x][shift-1] *=2
+                    this.score += this.state[x][shift-1]
                     shift--
                     prec = -1
                 }else{
@@ -179,7 +185,7 @@ let TestingMatx = [
     [2,8,16,16,0]
 ]
 
-var test = new Matrix(TestingMatx.length,TestingMatx)
+var test = new Matrix(TestingMatx)
 
 console.log(test.state)
 test.moveLeft()
@@ -188,3 +194,4 @@ test.moveLeft()
 console.log(test.state)
 test.moveLeft()
 console.log(test.state)
+console.log(test.score)
