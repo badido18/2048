@@ -1,29 +1,43 @@
-let matrix2DInit5 = [
+const matrix2DInit5 = [
     [0,0,0,0,0],
+    [0,0,2,0,0],
     [0,0,0,0,0],
-    [0,0,0,0,0],
-    [0,0,0,0,0],
+    [0,0,0,2,0],
     [0,0,0,0,0]
 ]
 
-
 class Matrix{
-    constructor(){
-        this.dimen = 5
-        this.state = matrix2DInit5
-        this.fillRandomTiles();
+    constructor(dim = 5,init = matrix2DInit5){
+        this.dimen = dim
+        this.state = init
+        this.lastState = []
+        this.free = []
     }
 
     fillRandomTiles(){
-        // here there will be filling first step
-        // testing
-        this.state = [
-            [2,0,0,0,0],
-            [2,8,16,0,0],
-            [4,0,0,0,0],
-            [0,8,16,0,0],
-            [2,8,16,16,0]
-        ]
+        // here there will be filling after action made
+        // 2 or 4
+        if (this.lastState == this.state){
+            //Do nothing
+        }
+        else{
+            this.lastState = this.state // save state
+            let numb = 2 + (2 * Math.floor(Math.random() * 2) )
+            this.loadFreeSpaces() 
+            let sp = Math.floor(Math.random() * (this.free.length - 1))
+            this.state[this.free[sp][0]][this.free[sp][1]] = numb
+        }
+
+    }
+
+    loadFreeSpaces(){
+        for(let x=0;x<this.dimen;x++){
+            for(let y=0;y<this.dimen;y++){
+                if(this.state[x][y] == 0){
+                    this.free.push([x,y])
+                }
+            }
+        }
     }
 
     shiftUpY(y){
@@ -130,33 +144,47 @@ class Matrix{
         for(let y=0;y<this.dimen;y++){
             this.shiftUpY(y)
         }
-        // fillRandomTiles()
+        this.fillRandomTiles()
     }
 
     moveDown(){
         for(let y=0;y<this.dimen;y++){
             this.shiftDownY(y)
         }
-        // fillRandomTiles()
+        this.fillRandomTiles()
     }
 
     moveLeft(){
         for(let x=0;x<this.dimen;x++){
             this.shiftLeftX(x)
         }
-        // fillRandomTiles()
+        this.fillRandomTiles()
     }
 
     moveRight(){
         for(let x=0;x<this.dimen;x++){
             this.shiftRightX(x)
         }
-        // fillRandomTiles()
+        this.fillRandomTiles()
     }
 }
 
-var test = new Matrix()
+// Testing 
 
+let TestingMatx = [
+    [2,0,0,0,0],
+    [2,8,16,0,0],
+    [4,0,0,0,0],
+    [0,8,16,0,0],
+    [2,8,16,16,0]
+]
+
+var test = new Matrix(TestingMatx.length,TestingMatx)
+
+console.log(test.state)
+test.moveLeft()
+console.log(test.state)
+test.moveLeft()
 console.log(test.state)
 test.moveLeft()
 console.log(test.state)
